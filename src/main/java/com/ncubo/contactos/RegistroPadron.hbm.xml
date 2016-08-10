@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 6, 2016 2:58:43 PM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.ncubo.contactos.RegistroPadron" table="REGISTROPADRON">
+        <id name="id" type="int">
+            <column name="ID" />
+            <generator class="increment" />
+        </id>
+        <property name="cedula" type="java.lang.String">
+            <column name="CEDULA" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="NOMBRE" />
+        </property>
+        <property name="apellidos" type="java.lang.String">
+            <column name="APELLIDOS" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="EMAIL" />
+        </property>
+        <property name="telefono" type="java.lang.String">
+            <column name="TELEFONO" />
+        </property>
+        <property name="id_empresa" type="int">
+            <column name="ID_EMPRESA" />
+        </property>
+        <property name="id_persona" type="int">
+            <column name="ID_PERSONA" />
+        </property>
+        <property name="creado_por" type="java.lang.String">
+            <column name="CREADO_POR" />
+        </property>
+        <property name="modificado_por" type="java.lang.String">
+            <column name="MODIFICADO_POR" />
+        </property>
+        <property name="fecha_creacion" type="java.sql.Date">
+            <column name="FECHA_CREACION" />
+        </property>
+        <property name="fecha_modificacion" type="java.sql.Date">
+            <column name="FECHA_MODIFICACION" />
+        </property>
+        <property name="registro_borrado" type="int">
+            <column name="REGISTRO_BORRADO" />
+        </property>
+        <property name="fecha_borrado" type="java.sql.Date">
+            <column name="FECHA_BORRADO" />
+        </property>
+        <property name="usuario_skype" type="java.lang.String">
+            <column name="USUARIO_SKYPE" />
+        </property>
+        <property name="celular" type="java.lang.String">
+            <column name="CELULAR" />
+        </property>
+        <property name="direccion_entrega" type="java.lang.String">
+            <column name="DIRECCION_ENTREGA" />
+        </property>
+        <property name="latitud" type="double">
+            <column name="LATITUD" />
+        </property>
+        <property name="longitud" type="double">
+            <column name="LONGITUD" />
+        </property>
+    </class>
+</hibernate-mapping>

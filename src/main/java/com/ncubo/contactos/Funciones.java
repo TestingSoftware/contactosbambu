@@ -49,9 +49,10 @@ public class Funciones {
 	public void crearDirectorio(String directorioACrear) throws IOException
 	{
 		Path path = Paths.get(directorioACrear);
-		if ( !Files.exists(path) )
+		if (!Files.exists(path))
 		{
 			Files.createDirectories(path);
+			System.out.println("creado");
 		}
 	}
 

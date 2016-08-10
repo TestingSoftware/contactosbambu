@@ -1,39 +1,74 @@
 package com.ncubo.contactos.persistencia;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
+import com.ncubo.contactos.RegistroPadron;
 public class Dao 
-{
-	static Conexion conexion = new Conexion();
-	private final String INSERT_QUERY = "INSERT INTO datos_persona (nombre, apellidos, "
-			+ "email, telefono, id_empresa, id_persona, creado_por, modificado_por, fecha_creacion,"
-			+ "fecha_modificacion, registro_borrado,fecha_borrado, "
-			+ "usuario_skype, celular, direccion_entrega, latitud, longitud)"
-			+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? , ?, ?, ?)";
+{	
+	//TODO Una vez insertados los registros verificar si existe antes de insertar de nuevo.
+	static Logger log = Logger.getLogger(Dao.class);
 	
-	public void insertarEnBaseDatos(String [] persona) throws SQLException
+	public List<String[]> insertar(List <String[]> arrayRegistro) 
 	{
-		PreparedStatement preparedStatement = conexion.getConexion().prepareStatement(INSERT_QUERY);
-
-		preparedStatement.setString(1, persona[5]);
-		preparedStatement.setString(2, persona[6] + persona[7]);
-		preparedStatement.setString(3, "");
-		preparedStatement.setString(4, "");
-		preparedStatement.setInt(5, 0);
-		preparedStatement.setInt(6, 0);
-		preparedStatement.setString(7, "");
-		preparedStatement.setString(8, "");
-		preparedStatement.setString(9, "0000-00-00");
-		preparedStatement.setString(10, "0000-00-00");
-		preparedStatement.setInt(11, 0);
-		preparedStatement.setString(12, "0000-00-00");
-		preparedStatement.setString(13, "");
-		preparedStatement.setString(14, "");
-		preparedStatement.setString(15, "");
-		preparedStatement.setDouble(16, 0.0);
-		preparedStatement.setDouble(17, 0.0);
-		preparedStatement.executeUpdate();
+		final Configuration configuration = new Configuration().configure();
+		
+		final StandardServiceRegistryBuilder builder = 
+				new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+		
+		final SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
+		final Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		
+		for(int i = 0; i < arrayRegistro.size(); i += 1)
+		{
+			RegistroPadron nuevoRegistro = new RegistroPadron();
+			nuevoRegistro = llenaRegistro(nuevoRegistro, arrayRegistro.remove(0));
+			session.save(nuevoRegistro);
+			
+			if(i % 20 == 0)
+			{
+				session.flush();
+				session.clear();
+			}
+		}
+		
+		transaction.commit();
+		session.close();
+		sessionFactory.close();
+		
+		return arrayRegistro;
+	}
+	
+	private RegistroPadron llenaRegistro(RegistroPadron nuevoRegistro, String[] datosPersona)
+	{
+		nuevoRegistro.setCedula(datosPersona[0]);
+		nuevoRegistro.setNombre(datosPersona[5]);
+		nuevoRegistro.setApellidos(datosPersona[6] + datosPersona[7]);
+		nuevoRegistro.setDireccion_entrega("");
+		nuevoRegistro.setCelular("");
+		nuevoRegistro.setCreado_por("");
+		nuevoRegistro.setEmail("");
+		nuevoRegistro.setFecha_borrado(new Date(Calendar.getInstance().getTime().getTime()));
+		nuevoRegistro.setFecha_creacion(new Date(Calendar.getInstance().getTime().getTime()));
+		nuevoRegistro.setFecha_modificacion(new Date(Calendar.getInstance().getTime().getTime()));
+		nuevoRegistro.setId_empresa(0);
+		nuevoRegistro.setId_persona(0);
+		nuevoRegistro.setLatitud(0.0);
+		nuevoRegistro.setLongitud(0.0);
+		nuevoRegistro.setTelefono("");
+		nuevoRegistro.setUsuario_skype("");
+		nuevoRegistro.setModificado_por("");
+		nuevoRegistro.setRegistro_borrado(0);
+		
+		return nuevoRegistro;
 	}
 }

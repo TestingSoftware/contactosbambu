@@ -7,11 +7,12 @@ import java.sql.SQLException;
 public class Conexion {
 	private static Conexion instancia = null;
 	private Connection conexion;
+	
 	public Conexion()
 	{
         crearConexion(); 
 	}
-
+	
 	public static Conexion getInstancia()
 	{
 		if (instancia == null)
@@ -26,7 +27,8 @@ public class Conexion {
 		    return conexion;
     }
 	
-	private void crearConexion() {
+	private void crearConexion() 
+	{
 		try
         {
             Class.forName("com.mysql.cj.jdbc.Driver");

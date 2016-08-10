@@ -8,30 +8,54 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.ncubo.contactos.persistencia.Dao;
 
 public class Contactos {
-	public static void obtieneContactosDesdeArchivo(String file_path) throws IOException, SQLException
+	
+	static Dao dao = new Dao();
+	static List<String[]> arrayRegistro = new ArrayList<String[]>();
+	static int index = 0;
+	
+	public static void obtieneContactosDesdeArchivo(String filePath) throws IOException, SQLException
 	{
-		File archivo = new File(file_path);
+		File archivo = new File(filePath);
 		FileReader fileReader = new FileReader(archivo);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		
 
 		String linea;
 		while((linea = bufferedReader.readLine()) != null)
 		{
-			seperadaColumnas(linea);
+			obtieneRegistroPadron(linea);
 		}
-		
-		bufferedReader.close();
-		
+		bufferedReader.close();	
 	}
-	private static void seperadaColumnas (String linea) throws SQLException
+	
+	private static void obtieneRegistroPadron (String linea) throws SQLException
 	{
 		List <String[]> listaDatosPersona = new ArrayList<String[]>();
 		listaDatosPersona.add(linea.split(","));
-		Dao dao = new Dao();
-		dao.insertarEnBaseDatos(listaDatosPersona.remove(0));
+		
+		construyeListaRegistro(listaDatosPersona.remove(0));
+	}
+	
+	private static void construyeListaRegistro(String [] registro)
+	{
+		Logger log = Logger.getLogger(Contactos.class);
+		if(index <= 999)
+		{	
+			System.out.println("Llenando Array");
+			log.debug("Llenando Array");
+			arrayRegistro.add(registro);
+		}
+		else
+		{
+			log.debug("Realizando inserción");
+			arrayRegistro = dao.insertar(arrayRegistro);
+			index = 0;
+		}
+		
+		index += 1;
 	}
 }
